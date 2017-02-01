@@ -261,7 +261,7 @@ class Unwarper(object):
                 nframes = self.vol.shape[3]
                 out = np.zeros(self.vol.shape)
                 for f in range(nframes):
-                    _out = ndimage.interpolation.map_coordinates(self.vol[..., f],
+                    out = ndimage.interpolation.map_coordinates(self.vol[..., f],
                                                                 vrcsw,
                                                                 output=np.float32,
                                                                 order=self.order)
@@ -283,14 +283,14 @@ class Unwarper(object):
                                                             vrcsg_m,
                                                             output=np.float32,
                                                             order=self.order)
-                vjacdet_lpsw[np.where(np.isnan(out))] = 0.
-                vjacdet_lpsw[np.where(np.isinf(out))] = 0.
+                vjacdet_lpsw[np.where(np.isnan(vjacdet_lpsw))] = 0.
+                vjacdet_lpsw[np.where(np.isinf(vjacdet_lpsw))] = 0.
 
                 log.info('Performing Jacobian multiplication')
                 if out.ndim == 3:
                     out = out * vjacdet_lpsw
                 elif out.ndim == 4:
-                    for f in out.shape[3]:
+                    for f in range(out.shape[3]):
                         out[..., f] = out[..., f] * vjacdet_lpsw
 
             # return image and the jacobian
