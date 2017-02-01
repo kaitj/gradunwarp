@@ -260,7 +260,7 @@ class Unwarper(object):
             if self.vol.ndim == 4:
                 nframes = self.vol.shape[3]
                 out = np.zeros(self.vol.shape)
-                for f in nframes:
+                for f in range(nframes):
                     _out = ndimage.interpolation.map_coordinates(self.vol[..., f],
                                                                 vrcsw,
                                                                 output=np.float32,
