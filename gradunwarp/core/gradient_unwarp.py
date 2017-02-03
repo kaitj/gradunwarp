@@ -95,8 +95,7 @@ class GradientUnwarpRunner(object):
 
         self.vol, self.m_rcs2ras = utils.get_vol_affine(self.args.infile)
 
-        self.unwarper = Unwarper(self.vol, self.m_rcs2ras, self.args.vendor,
-                            self.coeffs)
+        self.unwarper = Unwarper(self.vol, self.m_rcs2ras, self.args.vendor, self.coeffs, self.args.infile )
         if hasattr(self.args, 'fovmin') and self.args.fovmin:
             self.unwarper.fovmin = float(self.args.fovmin)
         if hasattr(self.args, 'fovmax') and self.args.fovmax:
