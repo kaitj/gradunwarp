@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ##
 #
 #   See COPYING file distributed along with the gradunwarp package for the
