@@ -41,9 +41,9 @@ def configuration(parent_package='', top_path=None):
     return config
 
 setup(name='gradunwarp',
-      version = '2.0_alpha',
-      description = 'Gradient Unwarping Package for Python/Numpy',
-      author = 'Krish Subramaniam',
+      version = 'HCP-1.0.3',
+      description = 'HCP version of Gradient Unwarping Package for Python/Numpy',
+      author = 'Human Connectome Project',
       py_modules  = mods,
       ext_modules = [ext1, ext2, ext3],
       scripts = scripts_cmd,
