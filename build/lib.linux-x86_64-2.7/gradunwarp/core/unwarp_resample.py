@@ -197,6 +197,24 @@ class Unwarper(object):
         # init jacobian temp image
         vc, vr = utils.meshgrid(np.arange(nc), np.arange(nr))
 
+        # Compute transform to map the internal voxel coordinates to FSL scaled mm coordinates
+        pixdim1=float((subprocess.Popen(['fslval', self.name,'pixdim1'], stdout=subprocess.PIPE).communicate()[0]).strip())
+        pixdim2=float((subprocess.Popen(['fslval', self.name,'pixdim2'], stdout=subprocess.PIPE).communicate()[0]).strip())
+        pixdim3=float((subprocess.Popen(['fslval', self.name,'pixdim3'], stdout=subprocess.PIPE).communicate()[0]).strip())
+        dim1=float((subprocess.Popen(['fslval', self.name,'dim1'], stdout=subprocess.PIPE).communicate()[0]).strip())
+        outputOrient=subprocess.Popen(['fslorient', self.name], stdout=subprocess.PIPE).communicate()[0]
+        if outputOrient.strip() == 'NEUROLOGICAL':
+            # if neurological then flip x coordinate (both here in premat and later in postmat)
+            m_vox2fsl = np.array([[-1.0*pixdim1, 0.0, 0.0, pixdim1*(dim1-1)],
+                              [0.0, pixdim2, 0.0, 0.0],
+                              [0.0, 0.0, pixdim3, 0.0],
+                              [0.0, 0.0, 0.0, 1.0]], dtype=np.float)
+        else:
+            m_vox2fsl = np.array([[pixdim1, 0.0, 0.0, 0.0],
+                              [0.0, pixdim2, 0.0, 0.0],
+                              [0.0, 0.0, pixdim3, 0.0],
+                              [0.0, 0.0, 0.0, 1.0]], dtype=np.float)
+															
         log.info('Unwarping slice by slice')
         # for every slice
         for s in xrange(ns):
@@ -245,23 +263,6 @@ class Unwarper(object):
             vrcsw = utils.transform_coordinates(vxyzw,
                                                 np.linalg.inv(m_rcs2lai))
             # map the internal voxel coordinates to FSL scaled mm coordinates
-            pixdim1=float((subprocess.Popen(['fslval', self.name,'pixdim1'], stdout=subprocess.PIPE).communicate()[0]).strip())
-            pixdim2=float((subprocess.Popen(['fslval', self.name,'pixdim2'], stdout=subprocess.PIPE).communicate()[0]).strip())
-            pixdim3=float((subprocess.Popen(['fslval', self.name,'pixdim3'], stdout=subprocess.PIPE).communicate()[0]).strip())
-            dim1=float((subprocess.Popen(['fslval', self.name,'dim1'], stdout=subprocess.PIPE).communicate()[0]).strip())
-            outputOrient=subprocess.Popen(['fslorient', self.name], stdout=subprocess.PIPE).communicate()[0]
-            if outputOrient.strip() == 'NEUROLOGICAL':
-                # if neurological then flip x coordinate (both here in premat and later in postmat)
-                m_vox2fsl = np.array([[-1.0*pixdim1, 0.0, 0.0, pixdim1*(dim1-1)],
-                                  [0.0, pixdim2, 0.0, 0.0],
-                                  [0.0, 0.0, pixdim3, 0.0],
-                                  [0.0, 0.0, 0.0, 1.0]], dtype=np.float)
-            else:
-                m_vox2fsl = np.array([[pixdim1, 0.0, 0.0, 0.0],
-                                  [0.0, pixdim2, 0.0, 0.0],
-                                  [0.0, 0.0, pixdim3, 0.0],
-                                  [0.0, 0.0, 0.0, 1.0]], dtype=np.float)
-                
             vfsl = utils.transform_coordinates(vrcsw, m_vox2fsl)
 
 

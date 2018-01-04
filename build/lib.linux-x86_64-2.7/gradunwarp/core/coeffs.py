@@ -124,9 +124,19 @@ def grad_file_parse(gfile, txt_var_map):
     line = gf.next()
     line = gf.next()
     line = gf.next()
+    line = gf.next()
+    line = gf.next()
+    line = gf.next()
     R0_m = float(line.strip().split()[0])
 
     # go to the data
+    line = gf.next()
+    line = gf.next()
+    line = gf.next()
+    line = gf.next()
+    line = gf.next()
+    line = gf.next()
+    line = gf.next()
     line = gf.next()
     line = gf.next()
     line = gf.next()
@@ -165,6 +175,7 @@ def grad_file_parse(gfile, txt_var_map):
             txt_var_map['Beta_z'][x,y] = float(line.split()[-2])
         try:
             line = gf.next()
+	    line = gf.next()
         except StopIteration:
             break
 

@@ -6,7 +6,7 @@
 
 if [ "$#" -lt 4 ]
 then
- echo "Usage $0 <input image> <output image> <grad coefficient file> <output warp>"
+ echo "Usage $0 <input image> <output image> <grad coefficient file> <output transform>"
  exit 0
 fi 
 
@@ -34,11 +34,11 @@ OutputWarpName=`remove_ext ${owarp}`
 
 fslroi ${infile} ${BaseName}_vol1.nii.gz 0 1
 
-echo "gradient_unwarp.py ${BaseName}_vol1.nii.gz trilinear.nii.gz siemens -g ${coeffs} -n" >> log.txt 
-gradient_unwarp.py ${BaseName}_vol1.nii.gz trilinear.nii.gz siemens -g ${coeffs} -n
+echo "gradient_unwarp.py ${BaseName}_vol1.nii.gz ${BaseName}_vol1_warped.nii.gz siemens -g ${coeffs} -n" >> log.txt 
+gradient_unwarp.py ${BaseName}_vol1.nii.gz ${BaseName}_vol1_warped.nii.gz siemens -g ${coeffs} -n
 
 # Create appropriate warpfield output and apply it for all time of 4D image
-convertwarp --abs --ref=trilinear.nii.gz --warp1=fullWarp_abs.nii.gz --relout --out=$owarp --jacobian=${OutputWarpName}_jacobian
+convertwarp --abs --ref=${BaseName}_vol1_warped.nii.gz --warp1=fullWarp_abs.nii.gz --relout --out=$owarp --jacobian=${OutputWarpName}_jacobian
 fslmaths ${OutputWarpName}_jacobian -Tmean ${OutputWarpName}_jacobian
 applywarp --rel --interp=spline -i $infile -r ${BaseName}_vol1.nii.gz -w $owarp -o $outfile
 
@@ -57,7 +57,7 @@ calc_grad_perc_dev --fullwarp=fullWarp_abs -o grad_dev
 fslmerge -t grad_dev grad_dev_x grad_dev_y grad_dev_z
 fslmaths grad_dev -div 100 grad_dev
 imrm grad_dev_?
-imrm trilinear
+imrm ${BaseName}_vol1_warped
 imrm ${BaseName}_vol1
 
 echo " " >> log.txt
