@@ -34,11 +34,11 @@ OutputWarpName=`remove_ext ${owarp}`
 
 fslroi ${infile} ${BaseName}_vol1.nii.gz 0 1
 
-echo "gradient_unwarp.py ${BaseName}_vol1.nii.gz ${BaseName}_vol1_warped.nii.gz siemens -g ${coeffs} -n" >> log.txt 
-gradient_unwarp.py ${BaseName}_vol1.nii.gz ${BaseName}_vol1_warped.nii.gz siemens -g ${coeffs} -n
+echo "gradient_unwarp.py ${BaseName}_vol1.nii.gz ${BaseName}_vol1_unwarped.nii.gz siemens -g ${coeffs} -n" >> log.txt 
+gradient_unwarp.py ${BaseName}_vol1.nii.gz ${BaseName}_vol1_unwarped.nii.gz siemens -g ${coeffs} -n
 
 # Create appropriate warpfield output and apply it for all time of 4D image
-convertwarp --abs --ref=${BaseName}_vol1_warped.nii.gz --warp1=fullWarp_abs.nii.gz --relout --out=$owarp --jacobian=${OutputWarpName}_jacobian
+convertwarp --abs --ref=${BaseName}_vol1_unwarped.nii.gz --warp1=fullWarp_abs.nii.gz --relout --out=$owarp --jacobian=${OutputWarpName}_jacobian
 fslmaths ${OutputWarpName}_jacobian -Tmean ${OutputWarpName}_jacobian
 applywarp --rel --interp=spline -i $infile -r ${BaseName}_vol1.nii.gz -w $owarp -o $outfile
 
