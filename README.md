@@ -22,6 +22,7 @@ gradunwarp needs
 * [Scipy][Scipy] (preferably, the latest)
 * Numpy devel package (to compile external modules written in C)
 * [nibabel][nibabel] (latest trunk, which has the MGH support)
+* [FSL][FSL] (preferably, the latest)
 
 requirements for nibabel.
 
@@ -156,6 +157,7 @@ To do this, after cloning the [HCP Pipelines Repository][HCP Pipelines] use:
 [nibabel-tarball]: https://github.com/downloads/ksubramz/gradunwarp/nibabel-1.2.0.dev.tar.gz
 [Numpy]: http://www.numpy.org
 [Scipy]: http://www.scipy.org
+[FSL]:https://fsl.fmrib.ox.ac.uk/fsl/fslwiki
 [nibabel]: http://nipy.org/nibabel
 [PyDICOM]: http://code.google.com/p/pydicom
 [nose]: http://pypi.python.org/pypi/nose
